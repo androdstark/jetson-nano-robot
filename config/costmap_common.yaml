@@ -1,0 +1,15 @@
+# Costmap comun para navegacion (local + global)
+obstacle_range: 3.0
+raytrace_range: 3.5
+footprint: [[-0.15, -0.15], [-0.15, 0.15], [0.15, 0.15], [0.15, -0.15]]
+
+inflation_radius: 0.20
+cost_scaling_factor: 5.0
+
+observation_sources: scan
+scan:
+  sensor_frame: camera_link
+  data_type: LaserScan
+  topic: /scan
+  marking: true
+  clearing: true

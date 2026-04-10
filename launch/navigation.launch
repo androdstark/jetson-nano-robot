@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Lanzar camara Orbbec -->
+  <include file="$(find astra_camera)/launch/astra_pro.launch"/>
+
+  <!-- Depth a LaserScan virtual -->
+  <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+    <param name="scan_height" value="1"/>
+    <param name="output_frame_id" value="camera_link"/>
+    <param name="range_min" value="0.45"/>
+    <param name="range_max" value="8.0"/>
+    <remap from="image" to="/camera/depth/image_raw"/>
+    <remap from="camera_info" to="/camera/depth/camera_info"/>
+  </node>
+
+  <!-- SLAM con gmapping -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <rosparam file="$(find robot_navigation)/config/gmapping.yaml" command="load"/>
+  </node>
+
+  <!-- Stack de navegacion move_base -->
+  <node pkg="move_base" type="move_base" name="move_base" respawn="false" output="screen">
+    <rosparam file="$(find robot_navigation)/config/costmap_common.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find robot_navigation)/config/costmap_common.yaml" command="load" ns="local_costmap"/>
+  </node>
+
+</launch>
